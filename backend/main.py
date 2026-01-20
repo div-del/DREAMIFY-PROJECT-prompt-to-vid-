@@ -89,5 +89,19 @@ def generate_video(request: PromptRequest):
         print(f"CRITICAL VIDEO ERROR: {str(e)}", file=sys.stderr, flush=True)
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.get("/api/debug-config")
+def debug_config():
+    token = os.getenv("HF_TOKEN")
+    status = "MISSING"
+    if token:
+        status = f"PRESENT (Length: {len(token)}, Starts: {token[:4]}...)"
+    
+    return {
+        "hf_token_status": status,
+        "cwd": os.getcwd(),
+        "files": os.listdir("."),
+        "env_path_exists": os.path.exists(".env")
+    }
+
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
