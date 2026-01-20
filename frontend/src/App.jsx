@@ -13,7 +13,9 @@ function App() {
     setImage(null);
     try {
       // Use 127.0.0.1 to avoid localhost IPv6 issues
-      const response = await axios.post("http://127.0.0.1:8000/api/generate-video", {
+      // Use environment variable or fallback to localhost
+      const apiUrl = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+      const response = await axios.post(`${apiUrl}/api/generate-video`, {
         prompt: prompt,
       });
       console.log("Response data:", response.data);
